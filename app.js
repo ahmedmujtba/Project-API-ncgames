@@ -19,7 +19,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   let psqlErrors = "22P02";
-  if (psqlErrors.includes(err.code)) {
+  if (psqlErrors === err.code) {
     res.status(400).send({ msg: "Bad Request" });
   } else {
     next(err);
