@@ -29,3 +29,46 @@ describe("/api/categories", () => {
     });
   });
 });
+describe("/api/reviews/:review_id", () => {
+  describe("GET", () => {
+    test("200: should return a review object with following properties: review_id, title, review_body, designer, review_img_url, votes, category (references slug in categories), owner (references users primary key i.e. username), created_at ", () => {
+      return request(app)
+        .get("/api/reviews/6")
+        .expect(200)
+        .then(({ body }) => {
+          const testReview = {
+            review_id: 6,
+            title: "Occaecat consequat officia in quis commodo.",
+            designer: "Ollie Tabooger",
+            owner: "mallionaire",
+            review_img_url:
+              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            review_body:
+              "Fugiat fugiat enim officia laborum quis. Aliquip laboris non nulla nostrud magna exercitation in ullamco aute laborum cillum nisi sint. Culpa excepteur aute cillum minim magna fugiat culpa adipisicing eiusmod laborum ipsum fugiat quis. Mollit consectetur amet sunt ex amet tempor magna consequat dolore cillum adipisicing. Proident est sunt amet ipsum magna proident fugiat deserunt mollit officia magna ea pariatur. Ullamco proident in nostrud pariatur. Minim consequat pariatur id pariatur adipisicing.",
+            category: "social deduction",
+            created_at: expect.any(String),
+            votes: 8,
+          };
+          const review = body.review;
+          expect(review).toBeInstanceOf(Object);
+          expect(review).toEqual(testReview);
+        });
+    });
+    test("400: should return an error when id input is invalid", () => {
+      return request(app)
+        .get("/api/reviews/banana")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("404: should return an error when review_id passed does not exist", () => {
+      return request(app)
+        .get("/api/reviews/9999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
+});
