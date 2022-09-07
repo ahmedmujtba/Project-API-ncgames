@@ -60,6 +60,49 @@ describe("/api/reviews/:review_id", () => {
         });
     });
   });
+  describe("PATCH", () => {
+    test("200: should update based on the object received as request body", () => {
+      const votesObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/reviews/3")
+        .expect(200)
+        .send(votesObj)
+        .then(({ body }) => {
+          expect(body.review).toBeInstanceOf(Object);
+          expect(body.review).toHaveProperty("review_id", expect.any(Number));
+          expect(body.review).toHaveProperty("title", expect.any(String));
+          expect(body.review).toHaveProperty("review_body", expect.any(String));
+          expect(body.review).toHaveProperty("designer", expect.any(String));
+          expect(body.review).toHaveProperty(
+            "review_img_url",
+            expect.any(String)
+          );
+          expect(body.review).toHaveProperty("votes", expect.any(Number));
+          expect(body.review.votes).toEqual(
+            body.review.votes + votesObj.inc_votes
+          );
+          expect(body.review).toHaveProperty("category", expect.any(String));
+          expect(body.review).toHaveProperty("owner", expect.any(String));
+          expect(body.review).toHaveProperty("created_at", expect.any(String));
+        });
+    });
+    test("404: should return an error when review_id passed does not exist", () => {
+      return request(app)
+        .get("/api/reviews/9999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    test("400: should return an error when object value passed is not a number", () => {
+      return request(app)
+        .get("/api/reviews/abc")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
 });
 describe("/api/users", () => {
   describe("GET", () => {
