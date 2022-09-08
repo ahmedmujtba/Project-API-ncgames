@@ -16,8 +16,8 @@ exports.addVotes = (req, res, next) => {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
   updateVotesById(review_id, inc_votes)
-    .then((updatedReview) => {
-      res.status(200).send({ updatedReview });
+    .then((review) => {
+      res.status(200).send({ review });
     })
     .catch((err) => next(err));
 };

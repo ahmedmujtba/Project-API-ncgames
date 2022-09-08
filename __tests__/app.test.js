@@ -68,6 +68,7 @@ describe("/api/reviews/:review_id", () => {
         .send(votesObj)
         .expect(200)
         .then(({ body }) => {
+          console.log(body);
           const review = body.review;
           expect(review).toBeInstanceOf(Object);
           const testReview = {
