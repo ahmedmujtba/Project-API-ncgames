@@ -68,7 +68,6 @@ describe("/api/reviews/:review_id", () => {
         .send(votesObj)
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
           const review = body.review;
           expect(review).toBeInstanceOf(Object);
           const testReview = {
@@ -88,16 +87,20 @@ describe("/api/reviews/:review_id", () => {
         });
     });
     test("404: should return an error when review_id passed does not exist", () => {
+      const votesObj = { inc_votes: 5 };
       return request(app)
-        .get("/api/reviews/9999")
+        .patch("/api/reviews/9999")
+        .send(votesObj)
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not Found");
         });
     });
     test("400: should return an error when object value passed is not a number", () => {
+      const votesObj = { inc_votes: "five" };
       return request(app)
-        .get("/api/reviews/abc")
+        .patch("/api/reviews/6")
+        .send(votesObj)
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");

@@ -13,16 +13,20 @@ exports.selectReviewById = (id) => {
 };
 
 exports.updateVotesById = (id, votes) => {
-  return db
-    .query(
-      `UPDATE reviews SET votes = $1 + votes WHERE review_id = $2 RETURNING *;`,
-      [votes, id]
-    )
-    .then(({ rows }) => {
-      if (rows.length > 0) {
-        return rows[0];
-      } else {
-        return Promise.reject({ status: 404, msg: "Not Found" });
-      }
-    });
+  if (typeof votes !== "number") {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  } else {
+    return db
+      .query(
+        `UPDATE reviews SET votes = $1 + votes WHERE review_id = $2 RETURNING *;`,
+        [votes, id]
+      )
+      .then(({ rows }) => {
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+      });
+  }
 };
