@@ -72,3 +72,22 @@ describe("/api/reviews/:review_id", () => {
     });
   });
 });
+describe("/api/users", () => {
+  describe("GET", () => {
+    test("200: should return an array of objects, each object with properties username, name and avatar_url", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.users).toBeInstanceOf(Array);
+          expect(body.users).not.toHaveLength(0);
+          body.users.forEach((user) => {
+            expect(user).toHaveProperty("username", expect.any(String));
+            expect(user).toHaveProperty("name", expect.any(String));
+            expect(user).toHaveProperty("avatar_url", expect.any(String));
+          });
+        });
+    });
+  });
+});
