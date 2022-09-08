@@ -71,6 +71,53 @@ describe("/api/reviews/:review_id", () => {
         });
     });
   });
+  describe("PATCH", () => {
+    test("200: should update review based on the object received as request body", () => {
+      const votesObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/reviews/6")
+        .send(votesObj)
+        .expect(200)
+        .then(({ body }) => {
+          const review = body.review;
+          expect(review).toBeInstanceOf(Object);
+          const testReview = {
+            review_id: 6,
+            title: "Occaecat consequat officia in quis commodo.",
+            designer: "Ollie Tabooger",
+            owner: "mallionaire",
+            review_img_url:
+              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            review_body:
+              "Fugiat fugiat enim officia laborum quis. Aliquip laboris non nulla nostrud magna exercitation in ullamco aute laborum cillum nisi sint. Culpa excepteur aute cillum minim magna fugiat culpa adipisicing eiusmod laborum ipsum fugiat quis. Mollit consectetur amet sunt ex amet tempor magna consequat dolore cillum adipisicing. Proident est sunt amet ipsum magna proident fugiat deserunt mollit officia magna ea pariatur. Ullamco proident in nostrud pariatur. Minim consequat pariatur id pariatur adipisicing.",
+            category: "social deduction",
+            created_at: expect.any(String),
+            votes: 13,
+          };
+          expect(review).toEqual(testReview);
+        });
+    });
+    test("404: should return an error when review_id passed does not exist", () => {
+      const votesObj = { inc_votes: 5 };
+      return request(app)
+        .patch("/api/reviews/9999")
+        .send(votesObj)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    test("400: should return an error when object value passed is not a number", () => {
+      const votesObj = { inc_votes: "five" };
+      return request(app)
+        .patch("/api/reviews/6")
+        .send(votesObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
 });
 describe("/api/users", () => {
   describe("GET", () => {
