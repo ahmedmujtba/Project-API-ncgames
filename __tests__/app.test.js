@@ -61,29 +61,29 @@ describe("/api/reviews/:review_id", () => {
     });
   });
   describe("PATCH", () => {
-    test("200: should update based on the object received as request body", () => {
+    test("200: should update review based on the object received as request body", () => {
       const votesObj = { inc_votes: 5 };
       return request(app)
-        .patch("/api/reviews/3")
-        .expect(200)
+        .patch("/api/reviews/6")
         .send(votesObj)
+        .expect(200)
         .then(({ body }) => {
-          expect(body.review).toBeInstanceOf(Object);
-          expect(body.review).toHaveProperty("review_id", expect.any(Number));
-          expect(body.review).toHaveProperty("title", expect.any(String));
-          expect(body.review).toHaveProperty("review_body", expect.any(String));
-          expect(body.review).toHaveProperty("designer", expect.any(String));
-          expect(body.review).toHaveProperty(
-            "review_img_url",
-            expect.any(String)
-          );
-          expect(body.review).toHaveProperty("votes", expect.any(Number));
-          expect(body.review.votes).toEqual(
-            body.review.votes + votesObj.inc_votes
-          );
-          expect(body.review).toHaveProperty("category", expect.any(String));
-          expect(body.review).toHaveProperty("owner", expect.any(String));
-          expect(body.review).toHaveProperty("created_at", expect.any(String));
+          const review = body.review;
+          expect(review).toBeInstanceOf(Object);
+          const testReview = {
+            review_id: 6,
+            title: "Occaecat consequat officia in quis commodo.",
+            designer: "Ollie Tabooger",
+            owner: "mallionaire",
+            review_img_url:
+              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            review_body:
+              "Fugiat fugiat enim officia laborum quis. Aliquip laboris non nulla nostrud magna exercitation in ullamco aute laborum cillum nisi sint. Culpa excepteur aute cillum minim magna fugiat culpa adipisicing eiusmod laborum ipsum fugiat quis. Mollit consectetur amet sunt ex amet tempor magna consequat dolore cillum adipisicing. Proident est sunt amet ipsum magna proident fugiat deserunt mollit officia magna ea pariatur. Ullamco proident in nostrud pariatur. Minim consequat pariatur id pariatur adipisicing.",
+            category: "social deduction",
+            created_at: expect.any(String),
+            votes: 13,
+          };
+          expect(review).toEqual(testReview);
         });
     });
     test("404: should return an error when review_id passed does not exist", () => {

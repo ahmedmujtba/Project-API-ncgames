@@ -18,7 +18,7 @@ exports.updateVotesById = (id, votes) => {
       `UPDATE reviews SET votes = $1 + votes WHERE review_id = $2 RETURNING *;`,
       [votes, id]
     )
-    .then((rows) => {
+    .then(({ rows }) => {
       if (rows.length > 0) {
         return rows[0];
       } else {

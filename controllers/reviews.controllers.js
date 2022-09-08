@@ -15,8 +15,6 @@ exports.getReviewById = (req, res, next) => {
 exports.addVotes = (req, res, next) => {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
-  console.log(req.body);
-  console.log(req.params);
   updateVotesById(review_id, inc_votes)
     .then((updatedReview) => {
       res.status(200).send({ updatedReview });
