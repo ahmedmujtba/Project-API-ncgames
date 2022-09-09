@@ -36,6 +36,28 @@ exports.selectReviewsSorted = (
   order = "DESC",
   category
 ) => {
-  const validSortBy = [sort_by];
+  const validSortBy = [
+    "created_at",
+    "owner",
+    "title",
+    "category",
+    "votes",
+    "designer",
+    "comment_count",
+  ];
   const validOrder = ["DESC", "ASC"];
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  let qrstr = `SELECT reviews.review_id, title, designer, owner, review_img_url, category, reviews.created_at, reviews.votes, COUNT (comments.review_id)::INT AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id`;
+  queryValues = [];
+  if (category) {
+    qrstr += ` WHERE category = $1`;
+    queryValues.push(qrstr);
+  }
+  qrstr += ` GROUP BY reviews.review_id ORDER BY ${sort_by} ${order};`;
+  return db.query(qrstr, queryValues).then((result) => {
+    return result.rows;
+  });
 };
