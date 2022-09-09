@@ -31,7 +31,7 @@ describe("/api/categories", () => {
 });
 describe("/api/reviews/:review_id", () => {
   describe("GET", () => {
-    test("200: should return a review object with following properties: review_id, title, review_body, designer, review_img_url, votes, category (references slug in categories), owner (references users primary key i.e. username), created_at ", () => {
+    test("200: should return a review object with following properties: review_id, title, review_body, designer, review_img_url, votes, category (references slug in categories), owner (references users primary key i.e. username), created_at, comment_count which is the total count of comments with this reveiw_id", () => {
       return request(app)
         .get("/api/reviews/6")
         .expect(200)
@@ -48,6 +48,7 @@ describe("/api/reviews/:review_id", () => {
             category: "social deduction",
             created_at: expect.any(String),
             votes: 8,
+            comment_count: 0,
           };
           const review = body.review;
           expect(review).toBeInstanceOf(Object);
@@ -126,7 +127,6 @@ describe("/api/users", () => {
         .get("/api/users")
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
           expect(body.users).toBeInstanceOf(Array);
           expect(body.users).not.toHaveLength(0);
           body.users.forEach((user) => {
