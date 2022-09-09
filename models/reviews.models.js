@@ -8,7 +8,6 @@ exports.selectReviewById = (id) => {
     )
     .then(({ rows }) => {
       if (rows.length > 0) {
-        console.log(rows[0]);
         return rows[0];
       } else {
         return Promise.reject({ status: 404, msg: "Not Found" });
@@ -34,5 +33,3 @@ exports.updateVotesById = (id, votes) => {
       });
   }
 };
-
-exports.selectReviewWIthCommentCount = () => {};
