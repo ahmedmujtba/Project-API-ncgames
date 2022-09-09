@@ -30,3 +30,12 @@ exports.updateVotesById = (id, votes) => {
       });
   }
 };
+
+exports.selectReviewsSorted = (
+  sort_by = "created_at",
+  order = "DESC",
+  category
+) => {
+  const validSortBy = [sort_by];
+  const validOrder = ["DESC", "ASC"];
+};

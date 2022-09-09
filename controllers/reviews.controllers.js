@@ -1,6 +1,7 @@
 const {
   selectReviewById,
   updateVotesById,
+  selectReviewsSorted,
 } = require("../models/reviews.models");
 
 exports.getReviewById = (req, res, next) => {
@@ -21,3 +22,5 @@ exports.addVotes = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+exports.getReviewsSorted = () => {};

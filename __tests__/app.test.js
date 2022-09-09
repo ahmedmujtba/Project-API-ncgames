@@ -138,3 +138,8 @@ describe("/api/users", () => {
     });
   });
 });
+describe("/api/reviews", () => {
+  describe("GET", () => {
+    test("200: should return an array of objects, each with properties owner, title, review_id, category, review_img_url, created_at, votes, designer, comment_count", () => {});
+  });
+});
