@@ -160,9 +160,17 @@ describe("/api/reviews", () => {
           });
         });
     });
-    test("400: should return an error when column to sort by or order is invalid", () => {
+    test("400: should return an error when column to sort by is invalid", () => {
       return request(app)
         .get("/api/reviews?sort_by=banana&order=badorder")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("400: should return an error when order is invalid", () => {
+      return request(app)
+        .get("/api/reviews?order=badorder")
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");
