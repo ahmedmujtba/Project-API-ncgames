@@ -64,3 +64,18 @@ exports.selectReviewsSorted = (
     return result.rows;
   });
 };
+
+exports.selectReviewByIdWithComments = (id) => {
+  return db
+    .query(
+      `SELECT review_id, comment_id, votes, created_at, author, body FROM comments WHERE review_id = $1;`,
+      [id]
+    )
+    .then(({ rows }) => {
+      if (rows.length > 0) {
+        return rows;
+      } else {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+    });
+};

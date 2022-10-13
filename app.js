@@ -4,6 +4,7 @@ const {
   getReviewById,
   addVotes,
   getReviewsSorted,
+  getReviewByIdWithComments,
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const app = express();
@@ -14,6 +15,7 @@ app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/users", getUsers);
 app.patch("/api/reviews/:review_id", addVotes);
 app.get("/api/reviews", getReviewsSorted);
+app.get("/api/reviews/:review_id/comments", getReviewByIdWithComments);
 
 // Error Handlers
 
