@@ -189,3 +189,41 @@ describe("/api/reviews", () => {
     });
   });
 });
+describe("/api/reviews/review_id/comments", () => {
+  describe("GET", () => {
+    test("200: should return an array of comments for the given review_id including properties comment_id, votes, created_at, author, body, review_id", () => {
+      return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+          console.log(body.reviews);
+          expect(body.reviews).toBeInstanceOf(Array);
+          expect(body.reviews).not.toHaveLength(0);
+          body.reviews.forEach((review) => {
+            expect(review).toHaveProperty("comment_id", expect.any(Number));
+            expect(review).toHaveProperty("review_id", expect.any(Number));
+            expect(review).toHaveProperty("votes", expect.any(Number));
+            expect(review).toHaveProperty("created_at", expect.any(String));
+            expect(review).toHaveProperty("author", expect.any(String));
+            expect(review).toHaveProperty("body", expect.any(String));
+          });
+        });
+    });
+    test("400: should return an error when id input is not valid", () => {
+      return request(app)
+        .get("/api/reviews/two/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("404: should return an error when review_id does not exist", () => {
+      return request(app)
+        .get("/api/reviews/999/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
+});
