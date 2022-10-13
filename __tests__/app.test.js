@@ -196,7 +196,6 @@ describe("/api/reviews/review_id/comments", () => {
         .get("/api/reviews/2/comments")
         .expect(200)
         .then(({ body }) => {
-          console.log(body.reviews);
           expect(body.reviews).toBeInstanceOf(Array);
           expect(body.reviews).not.toHaveLength(0);
           body.reviews.forEach((review) => {
