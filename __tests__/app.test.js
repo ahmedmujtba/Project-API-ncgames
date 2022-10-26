@@ -225,4 +225,60 @@ describe("/api/reviews/review_id/comments", () => {
         });
     });
   });
+  describe("POST", () => {
+    const commentObj = {
+      body: "posting an interesting fact",
+      username: "bainesface",
+    };
+    test("201: should accept an object with properties username and body and respond with the posted comment", () => {
+      const id = 3;
+      return request(app)
+        .post(`/api/reviews/${id}/comments`)
+        .send(commentObj)
+        .expect(201)
+        .then(({ body }) => {
+          let returnObj = body.comment;
+          expect(returnObj).toBeInstanceOf(Object);
+          expect(returnObj.body).toEqual("posting an interesting fact");
+          expect(returnObj.author).toBe("bainesface");
+          expect(returnObj.votes).toBe(0);
+          expect(returnObj.review_id).toBe(3);
+        });
+    });
+    test("400: should return an error when id input is not valid", () => {
+      return request(app)
+        .post("/api/reviews/three/comments")
+        .send(commentObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("400: should return an error when object returned has incorrect key", () => {
+      const commentObj = {
+        body: "posting an interesting fact",
+        key: "bainesface",
+      };
+      return request(app)
+        .post("/api/reviews/3/comments")
+        .send(commentObj)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("404: should return an error when username provided does not exist", () => {
+      const commentObj = {
+        body: "posting an interesting fact",
+        username: "ronald mcdonald",
+      };
+      return request(app)
+        .post("/api/reviews/3/comments")
+        .send(commentObj)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
 });
