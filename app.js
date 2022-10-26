@@ -5,6 +5,7 @@ const {
   addVotes,
   getReviewsSorted,
   getReviewByIdWithComments,
+  addCommentByReviewId,
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const app = express();
@@ -16,6 +17,7 @@ app.get("/api/users", getUsers);
 app.patch("/api/reviews/:review_id", addVotes);
 app.get("/api/reviews", getReviewsSorted);
 app.get("/api/reviews/:review_id/comments", getReviewByIdWithComments);
+app.post("/api/reviews/:review_id/comments", addCommentByReviewId);
 
 // Error Handlers
 
@@ -29,9 +31,18 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  let psqlErrors = "22P02";
-  if (psqlErrors === err.code) {
+  let psqlErrors = ["22P02", "23502"];
+  if (psqlErrors.includes(err.code)) {
     res.status(400).send({ msg: "Bad Request" });
+  } else {
+    next(err);
+  }
+});
+
+app.use((err, req, res, next) => {
+  let psqlErrors = ["23503"];
+  if (psqlErrors.includes(err.code)) {
+    res.status(404).send({ msg: "Not Found" });
   } else {
     next(err);
   }
