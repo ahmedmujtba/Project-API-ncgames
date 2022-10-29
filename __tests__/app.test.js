@@ -282,3 +282,23 @@ describe("/api/reviews/review_id/comments", () => {
     });
   });
 });
+describe("/api/comments/:comment_id", () => {
+  describe("DELETE", () => {
+    test("204: should delete the given comment by commentid", () => {
+      return request(app)
+        .delete("/api/comments/2")
+        .expect(204)
+        .then(({ body }) => {
+          expect(body).toEqual({});
+        });
+    });
+    test("404: should return an error when comment id does not exist", () => {
+      return request(app)
+        .delete("/api/comments/999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
+});

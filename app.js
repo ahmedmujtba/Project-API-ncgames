@@ -6,6 +6,7 @@ const {
   getReviewsSorted,
   getReviewByIdWithComments,
   addCommentByReviewId,
+  deleteCommentByCommentId,
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const app = express();
@@ -18,12 +19,12 @@ app.patch("/api/reviews/:review_id", addVotes);
 app.get("/api/reviews", getReviewsSorted);
 app.get("/api/reviews/:review_id/comments", getReviewByIdWithComments);
 app.post("/api/reviews/:review_id/comments", addCommentByReviewId);
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 // Error Handlers
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
-    console.log(err);
     res.status(err.status).send({ msg: err.msg });
   } else {
     next(err);
@@ -49,7 +50,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });
 });
 
