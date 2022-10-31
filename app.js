@@ -11,6 +11,8 @@ const {
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const app = express();
+const cors = require("cors");
+app.use(cors());
 app.use(express.json());
 
 app.get("/api", getApi);
