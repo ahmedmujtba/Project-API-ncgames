@@ -57,7 +57,7 @@ exports.selectReviewsSorted = (
   queryValues = [];
   if (category) {
     qrstr += ` WHERE category = $1`;
-    queryValues.push(qrstr);
+    queryValues.push(category);
   }
   qrstr += ` GROUP BY reviews.review_id ORDER BY ${sort_by} ${order};`;
   return db.query(qrstr, queryValues).then((result) => {
